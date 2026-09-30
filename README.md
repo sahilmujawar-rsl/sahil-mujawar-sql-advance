@@ -1,86 +1,85 @@
-# SQL (Basic) Assignment
+# SQL (Advanced) Assignment
 
 ## 1. Assignment Overview
 
-The SQL script demonstrates the following SQL fundamentals:
-
-- Creating tables and inserting sample data
-- Data retrieval using `SELECT`, column aliases, and `DISTINCT`
-- Filtering using `WHERE`, `BETWEEN`, and `LIKE`
-- Sorting and limiting results using `ORDER BY` and `LIMIT`
-- Aggregate functions: `COUNT`, `SUM`, `AVG`, `MAX`, `MIN`
-- Grouping using `GROUP BY` and `HAVING`
-- Joins: `INNER JOIN`, `LEFT JOIN`, `RIGHT JOIN`
-- Data manipulation using `INSERT`, `UPDATE`, `DELETE`
-- Creating a table with constraints: `PRIMARY KEY`, `NOT NULL`, `UNIQUE`
+Advanced SQL tasks in MySQL on the `customers`, `products` and `orders` tables. The tasks cover joins, subqueries, set operations, window functions, CTEs, views, indexes, stored routines, transactions, triggers and performance tuning.
 
 ## 2. Database Schema
 
-### Authors
+### Customers
 
-| Column      | Data Type    |
-|-------------|--------------|
-| author_id   | INT          |
-| author_name | VARCHAR(100) |
-| country     | VARCHAR(50)  |
+| Column        | Data Type    | Constraints |
+|---------------|--------------|-------------|
+| customer_id   | INT          | PRIMARY KEY |
+| customer_name | VARCHAR(100) | NOT NULL    |
+| city          | VARCHAR(50)  |             |
+| email         | VARCHAR(100) | UNIQUE      |
 
-### Books
+### Products
 
-| Column         | Data Type     |
-|----------------|---------------|
-| book_id        | INT           |
-| title          | VARCHAR(100)  |
-| author_id      | INT           |
-| category       | VARCHAR(50)   |
-| price          | DECIMAL(10,2) |
-| published_year | INT           |
+| Column       | Data Type     | Constraints |
+|--------------|---------------|-------------|
+| product_id   | INT           | PRIMARY KEY |
+| product_name | VARCHAR(100)  | NOT NULL    |
+| category     | VARCHAR(50)   |             |
+| price        | DECIMAL(10,2) | NOT NULL    |
 
-### Publishers (created in Task 21)
+### Orders
 
-| Column           | Data Type    | Constraints      |
-|------------------|--------------|------------------|
-| publisher_id     | INT          | PRIMARY KEY      |
-| publisher_name   | VARCHAR(100) | NOT NULL, UNIQUE |
-| country          | VARCHAR(50)  | NOT NULL         |
-| established_year | INT          | NOT NULL         |
+| Column      | Data Type | Constraints                       |
+|-------------|-----------|-----------------------------------|
+| order_id    | INT       | PRIMARY KEY                       |
+| customer_id | INT       | NOT NULL, FOREIGN KEY → Customers |
+| product_id  | INT       | NOT NULL, FOREIGN KEY → Products  |
+| quantity    | INT       | NOT NULL                          |
+| order_date  | DATE      | NOT NULL                          |
 
-### Relationship
+### Order_Audit (created in Task 19)
 
-`Books.author_id` refers to `Authors.author_id` (one author can have many books).
+| Column      | Data Type | Constraints                 |
+|-------------|-----------|-----------------------------|
+| audit_id    | INT       | PRIMARY KEY, AUTO_INCREMENT |
+| order_id    | INT       |                             |
+| customer_id | INT       |                             |
+| product_id  | INT       |                             |
+| quantity    | INT       |                             |
+| order_date  | DATE      |                             |
+| logged_at   | TIMESTAMP | DEFAULT CURRENT_TIMESTAMP   |
+
+### Relationships
+
+- `orders.customer_id` references `customers.customer_id`.
+- `orders.product_id` references `products.product_id`.
 
 ## 3. Steps to Execute the SQL Script
 
-**Step 1: Create and select a database**
-
-```sql
-CREATE DATABASE bookstore;
-USE bookstore;
-```
-
-**Step 2: Run the SQL script**
+The script creates and selects the `shop` database itself, so it can be run directly.
 
 From the MySQL command line:
 
 ```bash
-mysql -u <username> -p bookstore < sahil_mujawar_bookstore.sql
+mysql -u <username> -p < sahil_mujawar_advance.sql
 ```
 
-from inside the MySQL Workbench:
+Or from the MySQL client / Workbench:
 
 ```sql
-SOURCE sahil_mujawar_bookstore.sql;
+source sahil_mujawar_advance.sql;
 ```
 
-**Step 3: Execution order inside the script**
+Execution order inside the script:
 
-| Order | Section                                              | Commands executed                                                                        |
-|-------|------------------------------------------------------|------------------------------------------------------------------------------------------|
-| 1     | Setup                                                | `CREATE TABLE authors`, `CREATE TABLE books`, `INSERT INTO authors`, `INSERT INTO books` |
-| 2     | Section 1: Basic Queries (Tasks 1–4)                 | `SELECT`, column aliases, `DISTINCT`                                                     |
-| 3     | Section 2: Filtering Data (Tasks 5–9)                | `WHERE`, `BETWEEN`, `LIKE`                                                               |
-| 4     | Section 3: Sorting and Limiting (Tasks 10–11)        | `ORDER BY`, `LIMIT`                                                                      |
-| 5     | Section 4: Aggregate Functions (Task 12)             | `COUNT`, `SUM`, `AVG`, `MAX`, `MIN`                                                      |
-| 6     | Section 5: GROUP BY and HAVING (Tasks 13–14)         | `GROUP BY`, `HAVING`                                                                     |
-| 7     | Section 6: Joins (Tasks 15–17)                       | `INNER JOIN`, `LEFT JOIN`, `RIGHT JOIN`                                                  |
-| 8     | Section 7: Data Manipulation (Tasks 18–20)           | `INSERT`, `UPDATE`, `DELETE`                                                             |
-| 9     | Section 8: Creating Tables and Constraints (Task 21) | `CREATE TABLE Publishers`, `DESC publishers`                                             |
+| Order | Section                                    | Tasks   |
+|-------|--------------------------------------------|---------|
+| 1     | Setup (database, tables, sample data)      | –       |
+| 2     | Section 1: Advanced Joins                  | 1 – 3   |
+| 3     | Section 2: Subqueries                      | 4 – 6   |
+| 4     | Section 3: Set Operations                  | 7 – 8   |
+| 5     | Section 4: Window Functions                | 9 – 10  |
+| 6     | Section 5: CTEs                            | 11 – 12 |
+| 7     | Section 6: Views                           | 13      |
+| 8     | Section 7: Indexes and Query Performance   | 14 – 15 |
+| 9     | Section 8: Stored Procedures and Functions | 16 – 17 |
+| 10    | Section 9: Transactions                    | 18      |
+| 11    | Section 10: SQL Triggers                   | 19      |
+| 12    | Section 11: Performance Tuning             | 20      |
